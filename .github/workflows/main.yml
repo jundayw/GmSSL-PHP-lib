@@ -52,15 +52,7 @@ jobs:
         run: |
           cd ${{github.workspace}}\php
           phpize
-      - name: configure
-        run: |
-          cd ${{github.workspace}}\php
           ./configure
-      - name: nmake
-        env:
-          PATH: ${{github.workspace}}\build\bin;%PATH%
-        run: |
-          cd ${{github.workspace}}\php
           nmake
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v4
