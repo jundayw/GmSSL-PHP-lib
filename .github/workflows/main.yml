@@ -46,10 +46,13 @@ jobs:
         run: nmake
       - name: Checkout tools repo
         uses: actions/checkout@v4
+        with:
+          path: ${{github.workspace}}\php
       - name: Build phpredis
         env:
           PATH: ${{github.workspace}}\build\bin;%PATH%
         run: |
+          cd ${{github.workspace}}\php
           phpize
           ./configure
           nmake
