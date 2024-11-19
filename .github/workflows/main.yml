@@ -46,17 +46,20 @@ jobs:
         run: nmake
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          path: ${{github.workspace}}\php
       - name: phpize
         run: |
-          cd ${{github.workspace}}\php
           phpize
           # ./configure
-          ./configure --with-gmssl=${{github.workspace}}\gmssl
+          ./configure --enable-redis --with-prefix=${{steps.setup-php-sdk.outputs.prefix}} --with-gmssl=${{github.workspace}}\gmssl
           nmake
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: gmssl-${{matrix.php}}-x64-${{matrix.ts}}
+          name: php-${{matrix.php}}-x64-${{matrix.ts}}
           path: ${{github.workspace}}\php
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gmssl-${{matrix.php}}-x64-${{matrix.ts}}
+          path: ${{github.workspace}}\gmssl
