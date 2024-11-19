@@ -48,19 +48,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: ${{github.workspace}}\php
+      - name: phpize
+        working-directory: ${{github.workspace}}\php
+        run: phpize
+      - name: configure
+        working-directory: ${{github.workspace}}\php
+        run: configure
       - name: Build phpredis
         working-directory: ${{github.workspace}}\php
         env:
           PATH: ${{github.workspace}}\build\bin;%PATH%
-        shell: bash
-        run: |
-          tree
-          phpize
-          tree
-          ./configure
-          tree
-          nmake
-          tree
+        run: nmake
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v4
       #   with:
