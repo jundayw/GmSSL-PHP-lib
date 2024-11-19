@@ -49,13 +49,16 @@ jobs:
         with:
           path: ${{github.workspace}}\php
       - name: Build phpredis
+        working-directory: ${{github.workspace}}\php
         env:
           PATH: ${{github.workspace}}\build\bin;%PATH%
         shell: bash
         run: |
-          cd ${{github.workspace}}\php
+          tree
           phpize
+          tree
           ./configure
+          tree
           nmake
           tree
       # - name: Upload artifacts
