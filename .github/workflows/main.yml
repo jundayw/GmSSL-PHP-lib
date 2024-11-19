@@ -51,6 +51,7 @@ jobs:
       - name: Build phpredis
         env:
           PATH: ${{github.workspace}}\build\bin;%PATH%
+        shell: bash
         run: |
           cd ${{github.workspace}}\php
           phpize
