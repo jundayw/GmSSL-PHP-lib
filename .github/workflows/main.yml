@@ -14,15 +14,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.3']
-        ts: [ts]
+        php: ['8.1']
+        ts: [nts]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           repository: GmTLS/GmSSL
-          ref: 5a30e8d8781b811dedeab604b08534c043feed2d
+          ref: e4502ddd24c376c45d9b4df3d25555728c43b2a6
           path: ${{github.workspace}}\gmssl
       - name: Install PHP ${{ matrix.php }}
         uses: php/setup-php-sdk@v0.10
@@ -50,7 +50,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: 753c53a1419030f5abd3d79ee58b6482cc9dec0e
+          # ref: 753c53a1419030f5abd3d79ee58b6482cc9dec0e
           path: ${{github.workspace}}\gmssl-extension
       - name: phpize
         working-directory: ${{github.workspace}}\gmssl-extension
