@@ -39,7 +39,7 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles";
+        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=${{github.workspace}}\gmssl;
       - name: Build
         working-directory: ${{github.workspace}}\build
         # Build your program with the given configuration
@@ -50,10 +50,10 @@ jobs:
           path: ${{github.workspace}}\php
       - name: phpize
         run: |
-          # cd ${{github.workspace}}\php
+          cd ${{github.workspace}}\php
           phpize
           # ./configure
-          ./configure --enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+          ./configure --with-gmssl=${{github.workspace}}\gmssl
           nmake
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
