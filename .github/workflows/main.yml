@@ -50,9 +50,10 @@ jobs:
           path: ${{github.workspace}}\php
       - name: phpize
         run: |
-          cd ${{github.workspace}}\php
+          # cd ${{github.workspace}}\php
           phpize
-          ./configure
+          # ./configure
+          ./configure --enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
           nmake
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
