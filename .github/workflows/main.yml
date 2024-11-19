@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
           repository: GmTLS/GmSSL
-          ref: f48e05164fe275d6b596e1248627871491ddcbbd
+          ref: GmSSL-v3
           path: ${{github.workspace}}\gmssl
       - name: Install PHP ${{ matrix.php }}
         uses: php/setup-php-sdk@v0.10
