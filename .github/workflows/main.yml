@@ -56,7 +56,7 @@ jobs:
         run: phpize
       - name: configure
         working-directory: ${{github.workspace}}\gmssl-extension
-        run: configure --with-gmssl="C:/Program Files/GmSSL/"
+        run: ./configure --with-gmssl="C:/Program Files/GmSSL/"
         #--enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
         # run: ./configure
       - name: nmake
