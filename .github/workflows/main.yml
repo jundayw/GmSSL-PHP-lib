@@ -29,13 +29,13 @@ jobs:
         id: setup-php-sdk
         with:
           version: ${{ matrix.php }}
-          arch: amd64_x86
+          arch: x86
           ts: ${{matrix.ts}}
           cache: true
       - name: Install dependencies
         uses: ilammy/msvc-dev-cmd@v1
         with:
-          arch: amd64_x86
+          arch: x86
           toolset: ${{steps.setup-php-sdk.outputs.toolset}}
       - name: Configure CMake
         working-directory: ${{github.workspace}}\gmssl
