@@ -57,7 +57,7 @@ jobs:
       - name: configure
         working-directory: ${{github.workspace}}\gmssl-extension
         # run: configure --with-gmssl=${{github.workspace}}\gmssl-install --enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
-        run: configure
+        run: ./configure
       - name: nmake
         working-directory: ${{github.workspace}}\gmssl-extension
         run: nmake
