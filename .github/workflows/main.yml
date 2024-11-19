@@ -23,6 +23,7 @@ jobs:
           fetch-depth: 0
           repository: GmTLS/GmSSL
           ref: d655c06b3a6b0fe8cff900f293bf0e5aac6eb0a2
+          path: ${{github.workspace}}\gmssl
       - name: Install PHP ${{ matrix.php }}
         uses: php/setup-php-sdk@v0.10
         id: setup-php-sdk
@@ -37,29 +38,36 @@ jobs:
           arch: x64
           toolset: ${{steps.setup-php-sdk.outputs.toolset}}
       - name: Configure CMake
+        working-directory: ${{github.workspace}}\gmssl
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=${{github.workspace}}\gmssl;
+        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=${{github.workspace}}\gmssl-install;
       - name: Build
         working-directory: ${{github.workspace}}\build
         # Build your program with the given configuration
         run: nmake && nmake install
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: ${{github.workspace}}\gmssl-extension
       - name: phpize
+        working-directory: ${{github.workspace}}\gmssl-extension
         run: phpize
       - name: configure
-        # run: configure --with-gmssl=${{github.workspace}}\gmssl --enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+        working-directory: ${{github.workspace}}\gmssl-extension
+        # run: configure --with-gmssl=${{github.workspace}}\gmssl-install --enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
         run: configure
       - name: nmake
+        working-directory: ${{github.workspace}}\gmssl-extension
         run: nmake
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: php-${{matrix.php}}-x64-${{matrix.ts}}
-          path: ${{github.workspace}}\php
+          path: ${{github.workspace}}\gmssl-extension
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: gmssl-${{matrix.php}}-x64-${{matrix.ts}}
-          path: ${{github.workspace}}\gmssl
+          path: ${{github.workspace}}\gmssl-install
