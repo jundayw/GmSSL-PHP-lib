@@ -41,7 +41,7 @@ jobs:
         working-directory: ${{github.workspace}}\gmssl
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles" -DCMAKE_INSTALL_PREFIX=${{github.workspace}}\gmssl-install;
+        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles"
       - name: Build
         working-directory: ${{github.workspace}}\build
         # Build your program with the given configuration
@@ -56,18 +56,14 @@ jobs:
         run: phpize
       - name: configure
         working-directory: ${{github.workspace}}\gmssl-extension
-        # run: configure --with-gmssl=${{github.workspace}}\gmssl-install --enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
-        run: ./configure
+        run: configure --with-gmssl="C:/Program Files/GmSSL/"
+        #--enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+        # run: ./configure
       - name: nmake
         working-directory: ${{github.workspace}}\gmssl-extension
         run: nmake
-      - name: Upload artifacts
+      - name: Upload extension
         uses: actions/upload-artifact@v4
         with:
           name: php-${{matrix.php}}-x64-${{matrix.ts}}
           path: ${{github.workspace}}\gmssl-extension
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: gmssl-${{matrix.php}}-x64-${{matrix.ts}}
-          path: ${{github.workspace}}\gmssl-install
