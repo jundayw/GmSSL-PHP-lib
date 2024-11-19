@@ -34,7 +34,7 @@
 #include <gmssl/sm9.h>
 #include <gmssl/zuc.h>
 #include <gmssl/x509.h>
-
+#include <gmssl/aead.h>
 #include <gmssl/pbkdf2.h>
 #include <gmssl/error.h>
 
