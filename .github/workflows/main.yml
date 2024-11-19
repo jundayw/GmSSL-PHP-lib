@@ -44,21 +44,24 @@ jobs:
         working-directory: ${{github.workspace}}\build
         # Build your program with the given configuration
         run: nmake
-      - name: Checkout tools repo
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           path: ${{github.workspace}}\php
       - name: phpize
-        working-directory: ${{github.workspace}}\php
-        run: phpize
+        run: |
+          cd ${{github.workspace}}\php
+          phpize
       - name: configure
-        working-directory: ${{github.workspace}}\php
-        run: configure
-      - name: Build phpredis
-        working-directory: ${{github.workspace}}\php
+        run: |
+          cd ${{github.workspace}}\php
+          ./configure
+      - name: nmake
         env:
           PATH: ${{github.workspace}}\build\bin;%PATH%
-        run: nmake
+        run: |
+          cd ${{github.workspace}}\php
+          nmake
       # - name: Upload artifacts
       #   uses: actions/upload-artifact@v4
       #   with:
