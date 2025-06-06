@@ -1,0 +1,79 @@
+name: windows
+
+on:
+  workflow_dispatch:
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    continue-on-error: false
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0']
+        ts: [nts]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          repository: GmTLS/GmSSL
+          ref: d655c06b3a6b0fe8cff900f293bf0e5aac6eb0a2
+          path: ${{github.workspace}}\gmssl
+
+      - name: Install PHP ${{ matrix.php }}
+        uses: php/setup-php-sdk@v0.10
+        id: setup-php-sdk
+        with:
+          version: ${{ matrix.php }}
+          arch: x64
+          ts: ${{matrix.ts}}
+          cache: true
+
+      - name: Install dependencies
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+          toolset: ${{steps.setup-php-sdk.outputs.toolset}}
+
+      - name: Configure CMake
+        working-directory: ${{github.workspace}}\gmssl
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: cmake -B ${{github.workspace}}\build -G "NMake Makefiles"
+
+      - name: Build
+        working-directory: ${{github.workspace}}\build
+        # Build your program with the given configuration
+        run: nmake && nmake install
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: ${{github.workspace}}\gmssl-extension
+
+      - name: phpize
+        working-directory: ${{github.workspace}}\gmssl-extension
+        run: phpize
+
+      - name: configure
+        working-directory: ${{github.workspace}}\gmssl-extension
+        run: ./configure --with-gmssl="C:/Program Files/GmSSL/"
+        #--enable-gmssl --with-prefix=${{steps.setup-php-sdk.outputs.prefix}}
+        # run: ./configure
+
+      - name: nmake
+        working-directory: ${{github.workspace}}\gmssl-extension
+        run: nmake
+
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-${{matrix.php}}-x64-${{matrix.ts}}
+          path: ${{github.workspace}}\gmssl-extension
